@@ -78,10 +78,25 @@ def getWorkflowVersion() {
 // Get software versions for pipeline
 //
 def processVersionsFromYAML(yaml_file) {
-    def yaml = new org.yaml.snakeyaml.Yaml()
-    def versions = yaml.load(yaml_file).collectEntries { k, v -> [k.tokenize(':')[-1], v] }
-    return yaml.dumpAsMap(versions).trim()
+    try {
+        def clean_yaml = yaml_file.text.replaceAll(/(?m)^([^:]+):\s*(.*)$/) { fullMatch, k, v -> 
+            if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+                return "${k}: ${v}"
+            }
+            def escaped_v = v.replaceAll(/"/, '\\"')
+            return "${k}: \"${escaped_v}\"" 
+        }
+        
+        def yaml = new org.yaml.snakeyaml.Yaml()
+        def versions = yaml.load(clean_yaml).collectEntries { k, v -> [k.tokenize(':')[-1], v] }
+        return yaml.dumpAsMap(versions).trim()
+    } catch (Exception e) {
+        // FIXED FALLBACK: Return a flat text string representation, NEVER a Map object!
+        return "unknown: \"unknown\""
+    }
 }
+
+
 
 //
 // Get workflow version for pipeline

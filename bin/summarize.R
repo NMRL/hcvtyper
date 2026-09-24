@@ -1365,7 +1365,12 @@ df_distance_wide <- df_consensus_distance %>%
 # Join dataframes ---------------------------------------------------------
 
 # Start with the original input samplesheeet and extract only the sample names. This is to ensure that all samples are included in the final summary, even if they have no data.
-input_samplesheet <- read_csv(samplesheet) %>%
+# col_types pins `sample` as character -- same class of bug the candidates.csv
+# read above already guards against (CR-01/CR-02): a purely-numeric sample id
+# (e.g. from a numeric-only sequencer accession) is otherwise inferred as
+# <double> by readr, which then fails every downstream left_join(sampleName)
+# below against the <character> sampleName columns built from filenames.
+input_samplesheet <- read_csv(samplesheet, col_types = cols(sample = col_character())) %>%
   select("sampleName" = sample)
 
 final <- input_samplesheet %>%

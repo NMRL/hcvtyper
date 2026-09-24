@@ -7,4 +7,7 @@ dependencies:
   # TODO nf-core: List required Conda package(s).
   #               Software MUST be pinned to channel (i.e. "bioconda"), version (i.e. "1.10").
   #               For Conda, the build (i.e. "h9402c20_2") must be EXCLUDED to support installation on different operating systems.
-  - "YOUR-TOOL-HERE"
+  # - "YOUR-TOOL-HERE"
+  - conda-forge::r-tidyverse=2.0.0
+  - conda-forge::r-seqinr=4.2_36
+  - conda-forge::which=2.21

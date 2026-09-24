@@ -10,6 +10,8 @@ full_test/
 .nf-test*
 .claude/
 CLAUDE.md
+resume.sh
+extra_dependencies/*
 
 # Pipeline output directories. `results` is the conventional --outdir, and run
 # comparisons tend to land beside it as results_<something>/.
